@@ -16,8 +16,8 @@ import { CacheModule } from 'src/infrastructure/cache/cache.module';
 import { AjaxSpiderService } from './services/ajax-spider.service';
 import { EventsInterceptor } from './interceptors/events.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { AlertsService } from './services/alerts.service';
-import { AlertsController } from './controllers/alerts.controller';
+import { ResultsService } from './services/results.service';
+import { ResultsController } from './controllers/results.controller';
 
 @Module({
   imports: [
@@ -33,13 +33,13 @@ import { AlertsController } from './controllers/alerts.controller';
       TagsEntity,
     ]),
   ],
-  controllers: [DastController, DastEventsController, AlertsController],
+  controllers: [DastController, DastEventsController, ResultsController],
   providers: [
     SpiderService,
     AjaxSpiderService,
     AscanService,
     DastService,
-    AlertsService,
+    ResultsService,
     { provide: APP_INTERCEPTOR, useClass: EventsInterceptor },
   ],
   exports: [DastService],

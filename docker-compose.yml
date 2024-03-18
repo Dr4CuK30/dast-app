@@ -112,6 +112,21 @@ services:
       - meli_net
     volumes:
       - ./src:/dast-api/src
+  kafka_ui_meli:
+    platform: ${DOCKER_PLATFORM}
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka_ui_meli
+    depends_on:
+      - broker_meli
+    ports:
+      - 9091:8080
+    environment:
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper_meli:2181
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker_meli:29092
+    networks:
+      - meli_net
+
 networks:
   meli_net:
     name: meli_net
