@@ -1,0 +1,630 @@
+{
+	"info": {
+		"_postman_id": "436534ab-afa5-4dfe-92fd-5adcfe649f7e",
+		"name": "MELI API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29072925"
+	},
+	"item": [
+		{
+			"name": "Cron Jobs",
+			"item": [
+				{
+					"name": "Get active Crons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/cron",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"cron"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add scan cron",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cronName\": \"cronx\", // Nombre para identificar el evento programado\n    \"cronPatterm\": \"* * * * * *\", // Patron de ejecucion del cron. Consultar https://crontab.cronhub.io/\n    \"urls\": [\"http://juice-shop:3000\"], // Urls sobre las que se ejecutara el evento programado\n    \"subtreeOnly\": true,\n    \"maxChildren\": 1,\n    \"includeAjaxScan\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/cron/scan",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"cron",
+								"scan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cron",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cronName\": \"cronx\" // Nombre del cron que se desea eliminar\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/cron",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"cron"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DAST",
+			"item": [
+				{
+					"name": "Start Complete Scan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"urls\": [\"http://juice-shop:3000\", \"https://example.com\"], // URLs a las cuales se les hara el Scan\n    \"subtreeOnly\": true,\n    \"maxChildren\": 1,\n    \"includeAjaxScan\": true // Propiedad que determina si se incluira el escaneo con ajax spider\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/dast/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"dast",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Scans Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/dast/all-scans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"dast",
+								"all-scans"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "finished",
+									"description": "started, spider, ajax_spider, active_scan, finished, failed",
+									"disabled": true
+								},
+								{
+									"key": "mainUrl",
+									"value": "http://juice-shop:3000",
+									"description": "Filtrar por scans que tengan este URL",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Scans Info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/dast/all-scans",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"dast",
+										"all-scans"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "finished",
+											"description": "started, spider, ajax_spider, active_scan, finished, failed",
+											"disabled": true
+										},
+										{
+											"key": "mainUrl",
+											"value": "http://juice-shop:3000",
+											"description": "Filtrar por scans que tengan este URL",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1154"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"482-6I620iKgoh0T4Yd2ICNAu40z/dw\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 18 Mar 2024 04:27:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"spiderId\": null,\n        \"ascanId\": null,\n        \"mainUrl\": \"http://juice-shop:3000\",\n        \"status\": \"started\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-17T16:10:58.735Z\",\n        \"updatedAt\": \"2024-03-17T16:10:58.735Z\"\n    },\n    {\n        \"id\": 2,\n        \"spiderId\": 0,\n        \"ascanId\": 0,\n        \"mainUrl\": \"http://juice-shop:3000\",\n        \"status\": \"finished\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-17T16:14:02.238Z\",\n        \"updatedAt\": \"2024-03-17T16:29:01.000Z\"\n    },\n    {\n        \"id\": 3,\n        \"spiderId\": null,\n        \"ascanId\": null,\n        \"mainUrl\": \"http://juice-shop:3000\",\n        \"status\": \"started\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-17T22:33:01.144Z\",\n        \"updatedAt\": \"2024-03-17T22:33:01.144Z\"\n    },\n    {\n        \"id\": 4,\n        \"spiderId\": null,\n        \"ascanId\": null,\n        \"mainUrl\": \"https://example.com\",\n        \"status\": \"started\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-17T22:33:01.207Z\",\n        \"updatedAt\": \"2024-03-17T22:33:01.207Z\"\n    },\n    {\n        \"id\": 5,\n        \"spiderId\": 0,\n        \"ascanId\": 4,\n        \"mainUrl\": \"http://juice-shop:3000\",\n        \"status\": \"active_scan\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-18T03:55:42.251Z\",\n        \"updatedAt\": \"2024-03-18T04:13:18.000Z\"\n    },\n    {\n        \"id\": 6,\n        \"spiderId\": 1,\n        \"ascanId\": null,\n        \"mainUrl\": \"https://example.com\",\n        \"status\": \"failed\",\n        \"includeAjaxScan\": true,\n        \"createdAt\": \"2024-03-18T03:55:42.287Z\",\n        \"updatedAt\": \"2024-03-18T04:06:28.000Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Scan Info By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/dast/scan/:id?includeAlerts=false&includeUrls=false",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"dast",
+								"scan",
+								":id"
+							],
+							"query": [
+								{
+									"key": "includeAlerts",
+									"value": "false",
+									"description": "Si esta en \"true\" se devolveran las alertas encontradas en el scan"
+								},
+								{
+									"key": "includeUrls",
+									"value": "false",
+									"description": "Si esta en \"true\" se devolveran las urls encontradas en el scan"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Scan Info By Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/dast/scan/:id?includeAlerts=false&includeUrls=false",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"dast",
+										"scan",
+										":id"
+									],
+									"query": [
+										{
+											"key": "includeAlerts",
+											"value": "false",
+											"description": "Si esta en \"true\" se devolveran las alertas encontradas en el scan"
+										},
+										{
+											"key": "includeUrls",
+											"value": "false",
+											"description": "Si esta en \"true\" se devolveran las urls encontradas en el scan"
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "189"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"bd-djzkS/l5kAt/ufSwiWuqWc4t0Kk\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 18 Mar 2024 04:27:33 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"spiderId\": 0,\n    \"ascanId\": 0,\n    \"mainUrl\": \"http://juice-shop:3000\",\n    \"status\": \"finished\",\n    \"includeAjaxScan\": true,\n    \"createdAt\": \"2024-03-17T16:14:02.238Z\",\n    \"updatedAt\": \"2024-03-17T16:29:01.000Z\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Results",
+			"item": [
+				{
+					"name": "Get Alerts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/results/alerts?limit=19&page=1&risk=High",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"results",
+								"alerts"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "19"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "risk",
+									"value": "High",
+									"description": "Low, Medium, High, Informational"
+								},
+								{
+									"key": "tags",
+									"value": "OWASP_2017_A01, OWASP_2017_A05",
+									"description": "Filtrar por aquellos que tengan estos tags",
+									"disabled": true
+								},
+								{
+									"key": "scanId",
+									"value": "2",
+									"description": "Para obtener las alertas de un unico Scan",
+									"disabled": true
+								},
+								{
+									"key": "alertRef",
+									"value": "40018",
+									"description": "Buscar alertas por referencia",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Alerts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/results/alerts?limit=19&page=1&risk=High",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"results",
+										"alerts"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "19"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "risk",
+											"value": "High",
+											"description": "Low, Medium, High, Informational"
+										},
+										{
+											"key": "tags",
+											"value": "OWASP_2017_A01, OWASP_2017_A05",
+											"description": "Filtrar por aquellos que tengan estos tags",
+											"disabled": true
+										},
+										{
+											"key": "scanId",
+											"value": "2",
+											"description": "Para obtener las alertas de un unico Scan",
+											"disabled": true
+										},
+										{
+											"key": "alertRef",
+											"value": "40018",
+											"description": "Buscar alertas por referencia",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "4013"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"fad-18gABRPh23RlWFk+OARAs0BtZgs\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 18 Mar 2024 04:27:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"id\": 8680,\n            \"url\": \"http://juice-shop:3000/rest/products/search?q=%27%28\",\n            \"method\": \"GET\",\n            \"sourceId\": 1,\n            \"pluginId\": 40018,\n            \"cweId\": 89,\n            \"wascId\": 19,\n            \"other\": \"RDBMS [SQLite] likely, given error message regular expression [SQLITE_ERROR] matched by the HTML results.\\nThe vulnerability was detected by manipulating the parameter to cause a database error message to be returned and recognised\",\n            \"evidence\": \"SQLITE_ERROR\",\n            \"confidence\": \"Medium\",\n            \"description\": \"SQL injection may be possible.\",\n            \"messageId\": 8734,\n            \"inputVector\": \"querystring\",\n            \"reference\": \"https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html\",\n            \"solution\": \"Do not trust client side input, even if there is client side validation in place.\\nIn general, type check all data on the server side.\\nIf the application uses JDBC, use PreparedStatement or CallableStatement, with parameters passed by '?'\\nIf the application uses ASP, use ADO Command Objects with strong type checking and parameterized queries.\\nIf database Stored Procedures can be used, use them.\\nDo *not* concatenate strings into queries in the stored procedure, or use 'exec', 'exec immediate', or equivalent functionality!\\nDo not create dynamic SQL queries using simple string concatenation.\\nEscape all data received from the client.\\nApply an 'allow list' of allowed characters, or a 'deny list' of disallowed characters in user input.\\nApply the principle of least privilege by using the least privileged database user possible.\\nIn particular, avoid using the 'sa' or 'db-owner' database users. This does not eliminate SQL injection, but minimizes its impact.\\nGrant the minimum database access that is necessary for the application.\",\n            \"alert\": \"SQL Injection - SQLite\",\n            \"param\": \"q\",\n            \"attack\": \"'(\",\n            \"name\": \"SQL Injection - SQLite\",\n            \"risk\": \"High\",\n            \"alertRef\": \"40018\",\n            \"createdAt\": \"2024-03-17T16:29:01.189Z\",\n            \"updatedAt\": \"2024-03-17T16:29:01.189Z\",\n            \"tags\": [\n                {\n                    \"name\": \"OWASP_2017_A01\",\n                    \"source\": \"https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html\"\n                },\n                {\n                    \"name\": \"OWASP_2021_A03\",\n                    \"source\": \"https://owasp.org/Top10/A03_2021-Injection/\"\n                },\n                {\n                    \"name\": \"WSTG-v42-INPV-05\",\n                    \"source\": \"https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection\"\n                }\n            ]\n        },\n        {\n            \"id\": 8681,\n            \"url\": \"http://juice-shop:3000/latest/meta-data/?EIO=4&transport=polling&t=OvDE4cX&sid=sFJyr0aqBoXd7pr-AAFS\",\n            \"method\": \"POST\",\n            \"sourceId\": 1,\n            \"pluginId\": 90034,\n            \"cweId\": 0,\n            \"wascId\": 0,\n            \"other\": \"Based on the successful response status code cloud metadata may have been returned in the response. Check the response data to see if any cloud metadata has been returned.\\nThe meta data returned can include information that would allow an attacker to completely compromise the system.\",\n            \"evidence\": \"\",\n            \"confidence\": \"Low\",\n            \"description\": \"The Cloud Metadata Attack attempts to abuse a misconfigured NGINX server in order to access the instance metadata maintained by cloud service providers such as AWS, GCP and Azure.\\nAll of these providers provide metadata via an internal unroutable IP address '169.254.169.254' - this can be exposed by incorrectly configured NGINX servers and accessed by using this IP address in the Host header field.\",\n            \"messageId\": 13742,\n            \"inputVector\": \"\",\n            \"reference\": \"https://www.nginx.com/blog/trust-no-one-perils-of-trusting-user-input/\",\n            \"solution\": \"Do not trust any user data in NGINX configs. In this case it is probably the use of the $host variable which is set from the 'Host' header and can be controlled by an attacker.\",\n            \"alert\": \"Cloud Metadata Potentially Exposed\",\n            \"param\": \"\",\n            \"attack\": \"169.254.169.254\",\n            \"name\": \"Cloud Metadata Potentially Exposed\",\n            \"risk\": \"High\",\n            \"alertRef\": \"90034\",\n            \"createdAt\": \"2024-03-17T16:29:01.192Z\",\n            \"updatedAt\": \"2024-03-17T16:29:01.192Z\",\n            \"tags\": [\n                {\n                    \"name\": \"OWASP_2017_A06\",\n                    \"source\": \"https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html\"\n                },\n                {\n                    \"name\": \"OWASP_2021_A05\",\n                    \"source\": \"https://owasp.org/Top10/A05_2021-Security_Misconfiguration/\"\n                }\n            ]\n        }\n    ],\n    \"items\": 2,\n    \"page\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Urls",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/results/urls?limit=10&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"results",
+								"urls"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "scanId",
+									"value": "2",
+									"description": "Para obtener las urls de un unico Scan",
+									"disabled": true
+								},
+								{
+									"key": "url",
+									"value": "http://juice-shop:3000/",
+									"description": "Filtro por url",
+									"disabled": true
+								},
+								{
+									"key": "method",
+									"value": "GET",
+									"description": "GET, POST, PUT",
+									"disabled": true
+								},
+								{
+									"key": "foundOn",
+									"value": "spider",
+									"description": "ajax-spider, spider",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Urls",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/results/urls?limit=10&page=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"results",
+										"urls"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "scanId",
+											"value": "2",
+											"description": "Para obtener las urls de un unico Scan",
+											"disabled": true
+										},
+										{
+											"key": "url",
+											"value": "http://juice-shop:3000/",
+											"description": "Filtro por url",
+											"disabled": true
+										},
+										{
+											"key": "method",
+											"value": "GET",
+											"description": "GET, POST, PUT",
+											"disabled": true
+										},
+										{
+											"key": "foundOn",
+											"value": "spider",
+											"description": "ajax-spider, spider",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1953"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"7a1-pCT4B8lyVhLl37aQZFumSgDjRss\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 18 Mar 2024 04:28:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"id\": 1,\n            \"url\": \"http://juice-shop:3000/robots.txt\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.646Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.646Z\"\n        },\n        {\n            \"id\": 2,\n            \"url\": \"http://juice-shop:3000/sitemap.xml\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.660Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.660Z\"\n        },\n        {\n            \"id\": 3,\n            \"url\": \"http://juice-shop:3000\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.664Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.664Z\"\n        },\n        {\n            \"id\": 4,\n            \"url\": \"http://juice-shop:3000/runtime.js\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.666Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.666Z\"\n        },\n        {\n            \"id\": 5,\n            \"url\": \"http://juice-shop:3000/assets/public/favicon_js.ico\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.668Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.668Z\"\n        },\n        {\n            \"id\": 6,\n            \"url\": \"http://juice-shop:3000/polyfills.js\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.670Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.670Z\"\n        },\n        {\n            \"id\": 7,\n            \"url\": \"http://juice-shop:3000/styles.css\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.674Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.674Z\"\n        },\n        {\n            \"id\": 8,\n            \"url\": \"http://juice-shop:3000/vendor.js\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.678Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.678Z\"\n        },\n        {\n            \"id\": 9,\n            \"url\": \"http://juice-shop:3000/main.js\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.680Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.680Z\"\n        },\n        {\n            \"id\": 10,\n            \"url\": \"http://juice-shop:3000/ftp\",\n            \"method\": \"GET\",\n            \"processed\": true,\n            \"inScope\": true,\n            \"type\": \"spider\",\n            \"createdAt\": \"2024-03-17T16:14:21.683Z\",\n            \"updatedAt\": \"2024-03-17T16:14:21.683Z\"\n        }\n    ],\n    \"items\": 10,\n    \"page\": 1\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
