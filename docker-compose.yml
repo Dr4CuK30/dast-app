@@ -1,0 +1,117 @@
+version: '3'
+services:
+  zap:
+    container_name: zap
+    hostname: zap
+    image: 'owasp/zap2docker-stable'
+    command: zap.sh -daemon -host 0.0.0.0 -port 8090 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=fookey
+    ports:
+      - '8090:8090'
+    volumes:
+      - .:/zap/wrk/:rw
+    networks:
+      - meli_net
+
+  juice-shop:
+    container_name: juice-shop
+    hostname: juice-shop
+    image: 'bkimminich/juice-shop'
+    ports:
+      - '3000:3000'
+    networks:
+      - meli_net
+
+  mysql_meli:
+    container_name: mysql_meli
+    hostname: mysql_meli
+    image: 'mysql:8.0'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mini-dast
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - '33060:3306'
+    networks:
+      - meli_net
+
+  zookeeper_meli:
+    platform: ${DOCKER_PLATFORM}
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper_meli
+    ports:
+      - '2181:2181'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - meli_net
+
+  broker_meli:
+    platform: ${DOCKER_PLATFORM}
+    image: confluentinc/cp-kafka:latest
+    container_name: broker_meli
+    hostname: broker_meli
+    ports:
+      - '9092:9092'
+    depends_on:
+      - zookeeper_meli
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper_meli:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker_meli:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - meli_net
+
+  redis_meli:
+    platform: ${DOCKER_PLATFORM}
+    image: redis:latest
+    container_name: redis_meli
+    hostname: redis_meli
+    ports:
+      - 6379:6379
+    networks:
+      - meli_net
+
+  dast-api:
+    container_name: dast_api
+    depends_on:
+      - broker_meli
+      - redis_meli
+      - mysql_meli
+      - zap
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - meli_net
+    volumes:
+      - ./src:/dast-api/src
+
+  dast-worker:
+    container_name: dast_worker
+    depends_on:
+      - broker_meli
+      - redis_meli
+      - mysql_meli
+      - zap
+    build:
+      context: .
+      dockerfile: ./Dockerfile.worker
+    env_file:
+      - .env
+    networks:
+      - meli_net
+    volumes:
+      - ./src:/dast-api/src
+networks:
+  meli_net:
+    name: meli_net
