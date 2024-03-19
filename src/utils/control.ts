@@ -1,7 +1,6 @@
 export function delay(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
-
 export async function controlValidation(
   validationCallback: () => Promise<number>,
   finalizationCallback: () => any,

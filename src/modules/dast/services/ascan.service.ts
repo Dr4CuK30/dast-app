@@ -7,12 +7,14 @@ import { ScanStatusEnum } from '../enums/scan-status.enum';
 import { controlValidation } from 'src/utils/control';
 import { TagsEntity } from '../entities/tags.entity';
 import { AlertEntity } from '../entities/alert.entity';
+import { ScanStatusService } from 'src/infrastructure/cache/services/scan-status.service';
 
 @Injectable()
 export class AscanService {
   private MAX_SCANNER_TIME = +process.env.MAX_ACTIVE_SCAN_TIME_MS;
   private SPIDER_REFRESH_TIME = +process.env.ACTIVE_SCAN_REFRESH_MS;
   constructor(
+    private readonly scanStatusService: ScanStatusService,
     @Inject('SCANNER') private readonly scannerService: ScannerService,
     @InjectRepository(ScanTraceEntity)
     private readonly scanTraceEntity: Repository<ScanTraceEntity>,
@@ -32,7 +34,15 @@ export class AscanService {
   }
   private async verifyActiveScan(trace: ScanTraceEntity, ascanId: number) {
     controlValidation(
-      () => this.scannerService.getActiveScanStatus(ascanId),
+      async () => {
+        const progress = await this.scannerService.getActiveScanStatus(ascanId);
+        const cache = await this.scanStatusService.getScanStatus(trace.id);
+        this.scanStatusService.setScanStatus(trace.id, {
+          progress: progress,
+          waitingToFinish: cache.waitingToFinish || true,
+        });
+        return progress;
+      },
       () => {
         this.saveActiveScanResults(trace);
       },

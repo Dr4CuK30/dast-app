@@ -1,3 +1,4 @@
 export class ScanStatus {
-  waitToFinish: boolean;
+  waitingToFinish?: boolean;
+  progress?: number;
 }

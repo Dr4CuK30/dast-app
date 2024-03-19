@@ -8,12 +8,14 @@ import { UrlEntity } from '../entities/url.entity';
 import { ScanStatusEnum } from '../enums/scan-status.enum';
 import { KafkaProducerService } from 'src/infrastructure/kafka/producer/producer.service';
 import { UrlScanTypes } from '../enums/url-scan.enum';
+import { ScanStatusService } from 'src/infrastructure/cache/services/scan-status.service';
 
 @Injectable()
 export class SpiderService {
   private MAX_SCANNER_TIME = +process.env.MAX_SPIDER_TIME_MS;
   private SPIDER_REFRESH_TIME = +process.env.SPIDER_REFRESH_MS;
   constructor(
+    private readonly scanStatusService: ScanStatusService,
     private readonly kafkaService: KafkaProducerService,
     @Inject('SCANNER') private readonly scannerService: ScannerService,
     @InjectRepository(ScanTraceEntity)
@@ -45,7 +47,17 @@ export class SpiderService {
   ) {
     const { id: scanTraceId, includeAjaxScan } = trace;
     controlValidation(
-      () => this.scannerService.getSpiderScanStatus(trace.spiderId.toString()),
+      async () => {
+        const progress = await this.scannerService.getSpiderScanStatus(
+          trace.spiderId.toString(),
+        );
+        const cache = await this.scanStatusService.getScanStatus(trace.id);
+        this.scanStatusService.setScanStatus(trace.id, {
+          progress: progress,
+          waitingToFinish: cache.waitingToFinish,
+        });
+        return progress;
+      },
       () => {
         this.saveDetectedUrls(trace);
         if (includeAjaxScan) {

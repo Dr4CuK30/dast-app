@@ -11,10 +11,12 @@ import {
   StartCompleteScanResponse,
 } from '../dtos/dast-api.dto';
 import { KafkaProducerService } from 'src/infrastructure/kafka/producer/producer.service';
+import { ScanStatusService } from 'src/infrastructure/cache/services/scan-status.service';
 
 @Injectable()
 export class DastService {
   constructor(
+    private readonly scanStatusService: ScanStatusService,
     private readonly kafkaService: KafkaProducerService,
     @InjectRepository(ScanTraceEntity)
     private readonly scanTraceEntity: Repository<ScanTraceEntity>,
@@ -46,23 +48,18 @@ export class DastService {
     return this.scanTraceEntity.find({ where: filters });
   }
 
-  getScanCompleteInfo(id: number) {
-    return this.scanTraceEntity.findOne({
-      where: { id },
-      relations: { alerts: { tags: true }, urls: true },
-    });
-  }
-
-  getScanInfoById(
+  async getScanInfoById(
     id: number,
     { includeAlerts = true, includeUrls = true }: GetScanInfoDto,
   ) {
     const relations: FindOptionsRelations<ScanTraceEntity> = {};
     relations.urls = includeUrls;
     relations.alerts = includeAlerts ? { tags: true } : false;
-    return this.scanTraceEntity.findOne({
+    const scan = await this.scanTraceEntity.findOneOrFail({
       where: { id },
       relations,
     });
+    const { progress } = await this.scanStatusService.getScanStatus(id);
+    return { ...scan, progress };
   }
 }

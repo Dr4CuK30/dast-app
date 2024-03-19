@@ -8,8 +8,10 @@ export class ScanStatusService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async getScanStatus(scanId: number): Promise<ScanStatus> {
-    return this.cacheManager.get<ScanStatus>(
-      `${RedisKeyPrefixEnum.MELI_DAST_SCAN_INFO}:${scanId}`,
+    return (
+      (await this.cacheManager.get<ScanStatus>(
+        `${RedisKeyPrefixEnum.MELI_DAST_SCAN_INFO}:${scanId}`,
+      )) || {}
     );
   }
 
