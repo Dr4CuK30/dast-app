@@ -1,33 +1,35 @@
 
 ## Description
 
-Aplicación de escaneo de vulnerabilidades elaborada como solución de la prueba tecnica Backend de Mercado Libre.
+Vulnerabilities scan application made as a solution to a technical test and then adopted as own project.
 
-## Ejecución del container
+This project search apply the modern big infrastructure approaches and patters to a simple domain vulnerabilities multiscan system whose main function is detect automaticaly the knew security gaps concurrently of multiple domains using ZAP as Core.
 
-Copiar ".env.development" y cambiarle el nombre a ".env", y luego ejecutar:
+Among other functions, the main ones are:
+- Serve an API REST to execute and manage vulnerabilities scans.
+- Provide utilities to schedule periodic scans
+- Prevent bad use and facilitate the communication with Zaproxy API
+- Allow simultain scans
+  
+## Docker Execution
+
+Duplicate ".env.development" and rename to ".env", then execute:
 ```bash
 $ docker compose up
 ```
-Esto levantara los siguientes contenedores:
-- Zaproxy container
-- Juice-shop (aplicación vulnerable)
+This command will run the following containers:
+- Zaproxy
+- Juice-shop (vulnerable application for testing)
 - MySQL
 - Redis
 - Kafka
 - Zookeeper
-- DAST-API (Aplicación desarrollada)
-- DAST-WORKER
+- DAST-API (main aplication)
+- DAST-WORKER (workers)
 
-## Ejecución en maquina
-Copiar ".env.local" y cambiarle el nombre a ".env", y luego ejecutar: 
+## Local Execution
+Duplicate ".env.local" and rename to ".env", then execute: 
 ```bash
 $ npm i
 $ npm run start:dev
-```
-
-## Test
-```bash
-# unit tests
-$ npm run test
 ```
